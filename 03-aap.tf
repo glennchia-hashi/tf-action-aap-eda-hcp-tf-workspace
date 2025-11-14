@@ -7,6 +7,11 @@ data "aap_inventory" "this" {
   organization_name = local.organization_name
 }
 
+resource "aap_group" "this" {
+  inventory_id = aap_inventory.this.id
+  name         = "demo"
+}
+
 resource "aap_host" "this" {
   inventory_id = data.aap_inventory.this.id
   name         = "tf-actions-demo-host"
@@ -15,6 +20,8 @@ resource "aap_host" "this" {
   variables = jsonencode({
     ansible_host = aws_instance.tf_aap.public_ip
   })
+
+  groups = [aap_group.this.id]
 }
 
 data "aap_eda_eventstream" "this" {
@@ -23,7 +30,7 @@ data "aap_eda_eventstream" "this" {
 
 action "aap_eda_eventstream_post" "create" {
   config {
-    limit             = "demo"
+    limit             = aap_group.this.name
     template_type     = "job"
     job_template_name = var.aap_job_template_name
     organization_name = local.organization_name

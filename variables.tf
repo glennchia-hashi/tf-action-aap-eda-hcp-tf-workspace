@@ -57,7 +57,7 @@ variable "aap_inventory_name" {
 variable "aap_event_stream_name" {
   description = "Event stream name for datasource to lookup event stream URL"
   type        = string
-  default     = "HCP TF Actions"
+  default     = "HCP TF Actions Event Stream"
 }
 
 variable "aap_job_template_name" {
